@@ -30,7 +30,7 @@
 
 ;; (life is "Turkey )
 
-(defonce
+(defonce trip
   (q/sketch
      :renderer :opengl
      :setup setup
