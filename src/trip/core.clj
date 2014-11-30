@@ -11,15 +11,21 @@
 (def quality (atom [255 255 255])) ;; defaults to white
 (def qualia-source "https://docs.google.com/spreadsheets/d/1ShOWkEyJSkeFswHBq0kE9yh8fdxVYRXw2xPyOyfIirk/export?format=csv")
 
-(defmacro reality [qualia]
-  `(case ~qualia
-     ~@(mapcat (fn [[name & colors]]
-                 [name (mapv #(Integer/parseInt %) colors)])
-               (-> qualia-source slurp csv/read-csv))))
+
+(go-loop [_ (<! (async/timeout 0))]
+  (let [qualias (-> qualia-source slurp csv/read-csv)]
+    (defmacro reality [qualia]
+      `(case ~qualia
+         ~@(mapcat (fn [[name & colors]]
+                     [name (mapv #(Integer/parseInt %) colors)])
+                   qualias))))
+  (recur (<! (async/timeout 300))))
 
 (go-loop [qualia (<! is)]
-  (->> (reality qualia)
-       (revise quality))
+  (let [test (reality qualia)]
+    (println test)
+      (->> (reality qualia)
+           (revise quality)))
   (recur (<! is)))
 
 (defn setup []
@@ -29,7 +35,6 @@
 (defn draw []
   (apply q/background @quality))
 
-(life is "Love")
 
 
 (q/sketch
@@ -38,4 +43,5 @@
      :features [:present]
      :draw draw
      :size :fullscreen)
+
 
