@@ -1,6 +1,6 @@
 # trip
 
-A Clojure library designed to ... well, that part is up to you.
+Daniel Dennett (b. 1942), American philosopher and cognitive scientist, writes that qualia is "an unfamiliar term for something that could not be more familiar to each of us: the ways things seem to us."
 
 ## Usage
 
